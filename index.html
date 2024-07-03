@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>body{margin:0px;overflow:clip;}.option{display:flex;gap:2px;}</style>
+  </head>
+  <body>
+    <form id="params" style="display:flex;flex-flow:column;gap:10px;padding:10px;">
+      <div style="display:flex;gap:10px;">
+        <div style="display:flex;flex-flow:column;gap:5px;">
+        
+          <div class="option">
+            <label for="icon">Image URL:</label>
+            <input style="flex:1 0 auto" id="icon" placeholder="https://i.imgur.com/mgnZchn.png" value=""/>
+          </div>
+          
+          <div class="option">
+            <label for="width">Image Max Width (% of Screen):</label>
+            <input style="flex:1 0 auto" id="width" type="number" value="30"/>
+          </div>
+          
+          <div class="option">
+            <label for="font">Name Font:</label>
+            <input style="flex:1 0 auto" id="font" placeholder="Tahoma" value=""/>
+          </div>
+          
+          <div class="option">
+            <label for="color">Name Color:</label>
+            <input style="flex:1 0 auto" id="color" placeholder="#000000" value=""/>
+          </div>
+          
+          <div class="option">
+            <label for="yOffset">Name Offset:</label>
+            <input style="flex:1 0 auto" id="yOffset" type="number" value="0"/>
+          </div>
+          
+          <div class="option">
+            <label for="size">Name Base Size:</label>
+            <input style="flex:1 0 auto" id="size" type="number" value="24"/>
+          </div>
+          
+          <div class="option">
+            <label for="speed">Speed:</label>
+            <input style="flex:1 0 auto" id="speed" type="number" value="1"/>
+          </div>
+          
+        </div>
+        <div style="display:flex;flex-flow:column;">
+          <label for="names">Names:</label>
+          <textarea style="flex:1 0 auto" id="names" placeholder="List names, one per line"></textarea>
+        </div>
+      </div>
+      <div style="display:flex;gap:5px;">
+        <button id="create">Generate</button>
+        <label for="url">URL For Browser Source:</label>
+        <input style="flex:1 0 auto;" id="url" readonly="readonly"/>
+        <button id="preview">Preview</button>
+      </div>
+    </form>
+    
+    <script src="https://pixijs.download/release/pixi.js"></script>
+    <script src="main.js"></script>
+    <script src="config.js"></script>
+  </body>
+</html>
