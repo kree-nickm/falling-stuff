@@ -36,6 +36,11 @@
             <label class="label" for="size">Name Max Size (px):</label>
             <input style="flex:1 0 auto" id="size" type="number" value="24"/>
           </div>
+          
+          <div class="option" title="Add some space to the sides of the names to help them better fit within the image, if necessary.">
+            <label class="label" for="padding">Name Padding (px):</label>
+            <input style="flex:1 0 auto" id="padding" type="number" value="0"/>
+          </div>
         </div>
         
         <div style="display:flex;flex-flow:column;gap:5px;">
@@ -52,8 +57,13 @@
           </div>
           
           <div class="option" title="Each image will be randomly rotated up to this amount.">
-            <label class="label" for="rotate">Random Rotaton (degrees)</label>
+            <label class="label" for="rotate">Random Rotation (degrees)</label>
             <input style="flex:1 0 auto" id="rotate" type="number" value="30"/>
+          </div>
+          
+          <div class="option" title="HTML-compatible color. Can be a hex code e.g. '#ff0000' or the name of a color, provided HTML understands that color.">
+            <label class="label" for="background">Background Color:</label>
+            <input style="flex:1 0 auto" id="background" placeholder="#00ff00" value=""/>
           </div>
         </div>
         

@@ -1,4 +1,4 @@
-const paramProps = ["icon","font","color","speed","yOffset","width","size","delay","delayVary","rotate"];
+const paramProps = ["icon","font","color","speed","yOffset","width","size","delay","delayVary","rotate","background","padding"];
   
 document.forms.params.elements.create.addEventListener("click", event => {
   event.preventDefault();
@@ -43,7 +43,7 @@ if(params)
   {
     window.params = params;
     for(let param of paramProps)
-      if(window.params[param] != document.forms.params.elements[param].placeholder)
+      if(window.params[param] && window.params[param] != document.forms.params.elements[param].placeholder)
         document.forms.params.elements[param].value = window.params[param];
     document.forms.params.elements.names.value = (window.params.names??[]).join(",");
   }

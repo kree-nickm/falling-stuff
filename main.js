@@ -12,7 +12,9 @@ function setParams()
   window.params.rotate = isNaN(window.params.rotate) ? 30 : parseFloat(window.params.rotate);
   window.params.font = window.params.font ?? "Tahoma";
   window.params.color = window.params.color ?? "#000000";
+  window.params.background = window.params.background ?? "#00ff00";
   window.params.yOffset = isNaN(window.params.yOffset) ? 0 : parseInt(window.params.yOffset);
+  window.params.padding = isNaN(window.params.padding) ? 0 : parseInt(window.params.padding);
   window.params.size = isNaN(window.params.size) ? 24 : parseInt(window.params.size);
   window.params.speed = isNaN(window.params.speed) ? 100 : parseInt(window.params.speed);
   window.params.delay = isNaN(window.params.delay) ? 500 : parseInt(window.params.delay);
@@ -78,13 +80,14 @@ function tick(ticker)
 
 async function init()
 {
-  await app.init({background:"#00ff00", resizeTo:window})
+  await app.init({resizeTo:window})
   document.body.appendChild(app.canvas);
 }
 
 async function createItems()
 {
   app.ticker.remove(tick);
+  app.renderer.background.color.setValue(window.params.background);
   app.stage.removeChildren();
   for(let name of window.params.names)
   {
@@ -119,9 +122,9 @@ async function createItems()
     
     // Determine the size of things.
     let ogSpriteWidth = sprite.width;
-    let ogTextWidth = text.width;
-    if(text.width > sprite.width)
-      text.scale.set(sprite.width / text.width);
+    let ogTextWidth = text.width + window.params.padding;
+    if(ogTextWidth > sprite.width)
+      text.scale.set(sprite.width / ogTextWidth);
     
     item.pivot.set(item.width/2, item.height/2);
     item.angle = ((app.stage.children.length % 3) - 1) * window.params.rotate;
