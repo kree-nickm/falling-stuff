@@ -30,7 +30,9 @@ function placeItem(item)
   //item.updateTransform({rotation:deg*Math.PI/180});
   item.angle = deg;
   item.yMax = app.screen.height + window.params.delay + window.params.delayVary*Math.random();
-  for(let otherItem of app.stage.children.toSorted((a,b)=>b.y-a.y))
+  let children = app.stage.children.slice();
+  children.sort((a,b)=>b.y-a.y);
+  for(let otherItem of children)
   {
     if(item != otherItem && item.getBounds().rectangle.intersects(otherItem.getBounds().rectangle))
     {
@@ -41,11 +43,27 @@ function placeItem(item)
 
 function startFalling()
 {
-  for(let item of app.stage.children)
+  try
   {
-    placeItem(item);
+    for(let item of app.stage.children)
+    {
+        placeItem(item);
+    }
+    app.ticker.add(tick);
   }
-  app.ticker.add(tick);
+  catch(x)
+  {
+    let text = new PIXI.BitmapText({
+      text: x,
+      style: {
+        fontFamily: "Arial",
+        fill: "black",
+        fontSize: "16pt",
+        align: "center",
+      },
+    });
+    app.stage.addChild(text);
+  }
 }
 
 function tick(ticker)
