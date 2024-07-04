@@ -3,59 +3,85 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <style>body{margin:0px;overflow:clip;}.option{display:flex;gap:2px;}</style>
+    <style>body{margin:0px;overflow:clip;font-family:tahoma,arial,sans-serif;} .option{display:flex;gap:2px;} .title{font-size:1.1em;font-weight:bolder;text-decoration:underline;} .label{font-weight:bold;}</style>
   </head>
   <body>
     <form id="params" style="display:flex;flex-flow:column;gap:10px;padding:10px;">
       <div style="display:flex;gap:10px;">
-        <div style="display:flex;flex-flow:column;gap:5px;">
         
-          <div class="option">
-            <label for="icon">Image URL:</label>
-            <input style="flex:1 0 auto" id="icon" placeholder="https://i.imgur.com/mgnZchn.png" value=""/>
-          </div>
+        <div style="display:flex;flex-flow:column;flex:1 0 auto;">
+          <label class="title" for="names">Names:</label>
+          <textarea style="flex:1 0 auto" id="names" placeholder="List names, separate with a comma, semicolon, or new line"></textarea>
+        </div>
+      
+        <div style="display:flex;flex-flow:column;gap:5px;">
+          <span class="title">Name Settings</span>
           
-          <div class="option">
-            <label for="width">Image Max Width (% of Screen):</label>
-            <input style="flex:1 0 auto" id="width" type="number" value="30"/>
-          </div>
-          
-          <div class="option">
-            <label for="font">Name Font:</label>
+          <div class="option" title="Font of the names. Must be a common one that your browser (and the OBS browser source) has access to.">
+            <label class="label" for="font">Name Font:</label>
             <input style="flex:1 0 auto" id="font" placeholder="Tahoma" value=""/>
           </div>
           
-          <div class="option">
-            <label for="color">Name Color:</label>
+          <div class="option" title="HTML-compatible color. Can be a hex code e.g. '#ff0000' or the name of a color, provided HTML understands that color.">
+            <label class="label" for="color">Name Color:</label>
             <input style="flex:1 0 auto" id="color" placeholder="#000000" value=""/>
           </div>
           
-          <div class="option">
-            <label for="yOffset">Name Offset:</label>
+          <div class="option" title="Moves names up or down to make sure they show up right where you want them inside the image.">
+            <label class="label" for="yOffset">Name Offset (px):</label>
             <input style="flex:1 0 auto" id="yOffset" type="number" value="0"/>
           </div>
           
-          <div class="option">
-            <label for="size">Name Base Size:</label>
+          <div class="option" title="Font size for the names. This is the maximum size; names will shrink to fit within the images if the name is too long.">
+            <label class="label" for="size">Name Max Size (px):</label>
             <input style="flex:1 0 auto" id="size" type="number" value="24"/>
           </div>
+        </div>
+        
+        <div style="display:flex;flex-flow:column;gap:5px;">
+          <span class="title">Image Settings</span>
           
-          <div class="option">
-            <label for="speed">Speed:</label>
-            <input style="flex:1 0 auto" id="speed" type="number" value="1"/>
+          <div class="option" title="Link to an image. Images must be hosted somewhere online and accessible via URL. You can always use Imgur to host them for you.">
+            <label class="label" for="icon">Image URL:</label>
+            <input style="flex:1 0 auto" id="icon" placeholder="https://i.imgur.com/mgnZchn.png" value=""/>
           </div>
           
+          <div class="option" title="Maximum width of the images, as a percentage of your screen's width. Images will shrink if they are bigger than this.">
+            <label class="label" for="width">Image Max Width (% of Screen):</label>
+            <input style="flex:1 0 auto" id="width" type="number" value="30"/>
+          </div>
+          
+          <div class="option" title="Each image will be randomly rotated up to this amount.">
+            <label class="label" for="rotate">Random Rotaton (degrees)</label>
+            <input style="flex:1 0 auto" id="rotate" type="number" value="30"/>
+          </div>
         </div>
-        <div style="display:flex;flex-flow:column;">
-          <label for="names">Names:</label>
-          <textarea style="flex:1 0 auto" id="names" placeholder="List names, one per line"></textarea>
+        
+        <div style="display:flex;flex-flow:column;gap:5px;">
+          <span class="title">Falling Settings</span>
+          
+          <div class="option" title="Falling speed in pixels per second.">
+            <label class="label" for="speed">Speed (px/sec):</label>
+            <input style="flex:1 0 auto" id="speed" type="number" value="100"/>
+          </div>
+          
+          <div class="option" title="How far off screen the image must fall before it will go back to the top to fall again.">
+            <label class="label" for="delay">Respawn Delay (px):</label>
+            <input style="flex:1 0 auto" id="delay" type="number" value="500"/>
+          </div>
+          
+          <div class="option" title="Same as above, but this is an additional random delay that will be added in order to let the images spread out over time.">
+            <label class="label" for="delayVary">Max Random+ Delay (px):</label>
+            <input style="flex:1 0 auto" id="delayVary" type="number" value="1500"/>
+          </div>
         </div>
+        
       </div>
       <div style="display:flex;gap:5px;">
         <button id="create">Generate</button>
         <label for="url">URL For Browser Source:</label>
         <input style="flex:1 0 auto;" id="url" readonly="readonly"/>
-        <button id="preview">Preview</button>
+        <button id="preview" disabled="disabled" title="Generate before animating.">Animate</button>
       </div>
     </form>
     

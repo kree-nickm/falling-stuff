@@ -9,23 +9,27 @@ function setParams()
 {
   window.params.icon = window.params.icon ?? "https://i.imgur.com/mgnZchn.png";
   window.params.width = isNaN(window.params.width) ? 30 : parseFloat(window.params.width);
+  window.params.rotate = isNaN(window.params.rotate) ? 30 : parseFloat(window.params.rotate);
   window.params.font = window.params.font ?? "Tahoma";
   window.params.color = window.params.color ?? "#000000";
   window.params.yOffset = isNaN(window.params.yOffset) ? 0 : parseInt(window.params.yOffset);
   window.params.size = isNaN(window.params.size) ? 24 : parseInt(window.params.size);
-  window.params.speed = isNaN(window.params.speed) ? 1 : parseFloat(window.params.speed);
-  window.params.names = window.params.names?.split(",") ?? ["Name","LilLongerName","ASignificantlyLongerNameHere"];
+  window.params.speed = isNaN(window.params.speed) ? 100 : parseInt(window.params.speed);
+  window.params.delay = isNaN(window.params.delay) ? 500 : parseInt(window.params.delay);
+  window.params.delayVary = isNaN(window.params.delayVary) ? 1500 : parseInt(window.params.delayVary);
+  window.params.names = Array.isArray(window.params.names) ? window.params.names : window.params.names?.split(",") ?? ["Name","LilLongerName","ASignificantlyLongerNameHere"];
 }
 
 const app = new PIXI.Application();
 
 function placeItem(item)
 {
-  item.x = (app.screen.width-item.width) * Math.random();
-  //item.x = 0;
-  //item.y = (-1 - 2*Math.random()) * item.height;
+  item.x = (app.screen.width-item.width) * Math.random() + item.width/2;
   item.y = -1 * item.height;
-  item.yMax = app.screen.height + 1000*Math.random();
+  let deg = 2*window.params.rotate*Math.random() - window.params.rotate;
+  //item.updateTransform({rotation:deg*Math.PI/180});
+  item.angle = deg;
+  item.yMax = app.screen.height + window.params.delay + window.params.delayVary*Math.random();
   for(let otherItem of app.stage.children.toSorted((a,b)=>b.y-a.y))
   {
     if(item != otherItem && item.getBounds().rectangle.intersects(otherItem.getBounds().rectangle))
@@ -48,7 +52,7 @@ function tick(ticker)
 {
   for(let item of app.stage.children)
   {
-    item.y += ticker.deltaTime * window.params.speed;
+    item.y += ticker.deltaMS * window.params.speed / 1000;
     if(item.y > item.yMax)
       placeItem(item);
   }
@@ -101,10 +105,13 @@ async function createItems()
     if(text.width > sprite.width)
       text.scale.set(sprite.width / text.width);
     
+    item.pivot.set(item.width/2, item.height/2);
+    item.angle = ((app.stage.children.length % 3) - 1) * window.params.rotate;
     app.stage.addChild(item);
-    let nextX = 0;
-    let thisLine = 0;
-    let nextLine = 0;
+    
+    let nextX = item.width/2;
+    let thisLine = item.height/2;
+    let nextLine = item.height/2;
     for(let otherItem of app.stage.children)
     {
       if(item == otherItem)
@@ -115,7 +122,7 @@ async function createItems()
     }
     if(nextX + item.width > app.screen.width)
     {
-      item.x = 0;
+      item.x = 0 + item.width/2;
       item.y = nextLine;
     }
     else
