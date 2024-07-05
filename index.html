@@ -18,28 +18,38 @@
           <span class="title">Name Settings</span>
           
           <div class="option" title="Font of the names. Must be a common one that your browser (and the OBS browser source) has access to.">
-            <label class="label" for="font">Name Font:</label>
-            <input style="flex:1 0 auto" id="font" placeholder="Tahoma" value=""/>
-          </div>
-          
-          <div class="option" title="HTML-compatible color. Can be a hex code e.g. '#ff0000' or the name of a color, provided HTML understands that color.">
-            <label class="label" for="color">Name Color:</label>
-            <input style="flex:1 0 auto" id="color" placeholder="#000000" value=""/>
-          </div>
-          
-          <div class="option" title="Moves names up or down to make sure they show up right where you want them inside the image.">
-            <label class="label" for="yOffset">Name Offset (px):</label>
-            <input style="flex:1 0 auto" id="yOffset" type="number" value="0"/>
+            <label class="label" for="font">Font:</label>
+            <input style="flex:1 0 auto" id="font"/>
           </div>
           
           <div class="option" title="Font size for the names. This is the maximum size; names will shrink to fit within the images if the name is too long.">
-            <label class="label" for="size">Name Max Size (px):</label>
-            <input style="flex:1 0 auto" id="size" type="number" value="24"/>
+            <label class="label" for="size">Font Size (px):</label>
+            <input style="flex:1 0 auto" id="size" type="number"/>
+          </div>
+          
+          <div class="option" title="Moves names up or down to make sure they show up right where you want them inside the image.">
+            <label class="label" for="yOffset">Vertical Position (px):</label>
+            <input style="flex:1 0 auto" id="yOffset" type="number"/>
           </div>
           
           <div class="option" title="Add some space to the sides of the names to help them better fit within the image, if necessary.">
-            <label class="label" for="padding">Name Padding (px):</label>
-            <input style="flex:1 0 auto" id="padding" type="number" value="0"/>
+            <label class="label" for="padding">Side Padding (px):</label>
+            <input style="flex:1 0 auto" id="padding" type="number"/>
+          </div>
+          
+          <div class="option" title="HTML-compatible color. Can be a hex code e.g. '#ff0000' or the name of a color, provided HTML understands that color.">
+            <label class="label" for="color">Color:</label>
+            <input style="flex:1 0 auto" id="color"/>
+          </div>
+          
+          <div class="option" title="Size of the highlight around the names, to help them stand out from the image.">
+            <label class="label" for="shadowSize">Shadow Size:</label>
+            <input style="flex:1 0 auto" id="shadowSize" type="number"/>
+          </div>
+          
+          <div class="option" title="HTML-compatible color. Can be a hex code e.g. '#ff0000' or the name of a color, provided HTML understands that color.">
+            <label class="label" for="shadowColor">Shadow Color:</label>
+            <input style="flex:1 0 auto" id="shadowColor"/>
           </div>
         </div>
         
@@ -48,22 +58,22 @@
           
           <div class="option" title="Link to an image. Images must be hosted somewhere online and accessible via URL. You can always use Imgur to host them for you.">
             <label class="label" for="icon">Image URL:</label>
-            <input style="flex:1 0 auto" id="icon" placeholder="https://i.imgur.com/mgnZchn.png" value=""/>
+            <input style="flex:1 0 auto" id="icon"/>
           </div>
           
           <div class="option" title="Maximum width of the images, as a percentage of your screen's width. Images will shrink if they are bigger than this.">
-            <label class="label" for="width">Image Max Width (% of Screen):</label>
-            <input style="flex:1 0 auto" id="width" type="number" value="30"/>
+            <label class="label" for="width">Max Width (px):</label>
+            <input style="flex:1 0 auto" id="width" type="number"/>
           </div>
           
           <div class="option" title="Each image will be randomly rotated up to this amount.">
-            <label class="label" for="rotate">Random Rotation (degrees)</label>
-            <input style="flex:1 0 auto" id="rotate" type="number" value="30"/>
+            <label class="label" for="rotate">Random Rotation (degrees):</label>
+            <input style="flex:1 0 auto" id="rotate" type="number"/>
           </div>
           
           <div class="option" title="HTML-compatible color. Can be a hex code e.g. '#ff0000' or the name of a color, provided HTML understands that color.">
             <label class="label" for="background">Background Color:</label>
-            <input style="flex:1 0 auto" id="background" placeholder="#00ff00" value=""/>
+            <input style="flex:1 0 auto" id="background"/>
           </div>
         </div>
         
@@ -72,17 +82,27 @@
           
           <div class="option" title="Falling speed in pixels per second.">
             <label class="label" for="speed">Speed (px/sec):</label>
-            <input style="flex:1 0 auto" id="speed" type="number" value="100"/>
+            <input style="flex:1 0 auto" id="speed" type="number"/>
           </div>
           
           <div class="option" title="How far off screen the image must fall before it will go back to the top to fall again.">
             <label class="label" for="delay">Respawn Delay (px):</label>
-            <input style="flex:1 0 auto" id="delay" type="number" value="500"/>
+            <input style="flex:1 0 auto" id="delay" type="number"/>
           </div>
           
           <div class="option" title="Same as above, but this is an additional random delay that will be added in order to let the images spread out over time.">
-            <label class="label" for="delayVary">Max Random+ Delay (px):</label>
-            <input style="flex:1 0 auto" id="delayVary" type="number" value="1500"/>
+            <label class="label" for="delayVary">Randomly Added Delay (px):</label>
+            <input style="flex:1 0 auto" id="delayVary" type="number"/>
+          </div>
+          
+          <div class="option" title="">
+            <label class="label" for="avoid">Avoid Line (% Across Screen)</label>
+            <input style="flex:1 0 auto" id="avoid" type="number"/>
+          </div>
+          
+          <div class="option" title="">
+            <label class="label" for="avoidWidth">Avoid Width (% of Screen)</label>
+            <input style="flex:1 0 auto" id="avoidWidth" type="number"/>
           </div>
         </div>
         
@@ -92,6 +112,7 @@
         <label for="url">URL For Browser Source:</label>
         <input style="flex:1 0 auto;" id="url" readonly="readonly"/>
         <button id="preview" disabled="disabled" title="Generate before animating.">Animate</button>
+        <button id="load" disabled="disabled" title="Generate before opening URL. This is to double-check the actual browser source URL without having to add it into OBS first.">Open URL</button>
       </div>
     </form>
     

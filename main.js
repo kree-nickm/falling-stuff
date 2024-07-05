@@ -1,38 +1,66 @@
-window.params = location.search.at(0)=="?" ? location.search.slice(1).split("&").reduce((result,param) => {
-  let p = param.split("=");
-  result[p[0]] = p[1] ?? true;
-  return result;
-}, {}) : {};
-setParams();
-
-function setParams()
+function setParams(params)
 {
-  window.params.icon = decodeURIComponent(window.params.icon) ?? "https://i.imgur.com/mgnZchn.png";
-  window.params.width = isNaN(window.params.width) ? 30 : parseFloat(window.params.width);
-  window.params.rotate = isNaN(window.params.rotate) ? 30 : parseFloat(window.params.rotate);
-  window.params.font = window.params.font ?? "Tahoma";
-  window.params.color = window.params.color ?? "#000000";
-  window.params.background = window.params.background ?? "#00ff00";
-  window.params.yOffset = isNaN(window.params.yOffset) ? 0 : parseInt(window.params.yOffset);
-  window.params.padding = isNaN(window.params.padding) ? 0 : parseInt(window.params.padding);
-  window.params.size = isNaN(window.params.size) ? 24 : parseInt(window.params.size);
-  window.params.speed = isNaN(window.params.speed) ? 100 : parseInt(window.params.speed);
-  window.params.delay = isNaN(window.params.delay) ? 500 : parseInt(window.params.delay);
-  window.params.delayVary = isNaN(window.params.delayVary) ? 1500 : parseInt(window.params.delayVary);
-  window.params.names = Array.isArray(window.params.names) ? window.params.names : window.params.names?.split(",") ?? ["Name","LilLongerName","ASignificantlyLongerNameHere"];
+  if(!params)
+    params = window.params;
+  try
+  {
+    params.icon = (new URL(params.icon)).href;
+  }
+  catch(x)
+  {
+    params.icon = "https://i.imgur.com/mgnZchn.png";
+  }
+  params.width = isNaN(params.width) ? 300 : parseFloat(params.width);
+  params.avoid = isNaN(params.avoid) ? 0 : parseFloat(params.avoid);
+  params.avoidWidth = isNaN(params.avoidWidth) ? 0 : parseFloat(params.avoidWidth);
+  params.rotate = isNaN(params.rotate) ? 30 : parseFloat(params.rotate);
+  params.font = params.font ? params.font : "Tahoma";
+  params.color = params.color ? params.color : "#000000";
+  params.shadowSize = isNaN(params.shadowSize) ? 1 : parseFloat(params.shadowSize);
+  params.shadowColor = params.shadowColor ? params.shadowColor : "#ffffff";
+  params.background = params.background ? params.background : "#00ff00";
+  params.yOffset = isNaN(params.yOffset) ? 0 : parseFloat(params.yOffset);
+  params.padding = isNaN(params.padding) ? 0 : parseFloat(params.padding);
+  params.size = isNaN(params.size) ? 24 : parseFloat(params.size);
+  params.speed = isNaN(params.speed) ? 100 : parseFloat(params.speed);
+  params.delay = isNaN(params.delay) ? 500 : parseFloat(params.delay);
+  params.delayVary = isNaN(params.delayVary) ? 1500 : parseFloat(params.delayVary);
+  params.names = Array.isArray(params.names) ? params.names : params.names?.split(",") ?? ["Name","LilLongerName","ASignificantlyLongerNameHere"];
+  return params;
 }
-
-const app = new PIXI.Application();
 
 function placeItem(item)
 {
-  item.x = (app.screen.width-item.width) * Math.random() + item.width/2;
+  if(window.params.avoid > 0 && window.params.avoid < 100)
+  {
+    let parts = [
+      app.screen.width * (window.params.avoid - window.params.avoidWidth/2) / 100,
+      app.screen.width * (window.params.avoid + window.params.avoidWidth/2) / 100,
+    ];
+    
+    let leftright = Math.floor(Math.random()*2) + 1;
+    if(parts[0] < item.width && app.screen.width-parts[1] < item.width)
+      leftright = 0;
+    else if(parts[0] < item.width)
+      leftright = 2;
+    else if(app.screen.width-parts[1] < item.width)
+      leftright = 1;
+    
+    if(leftright == 1)
+      item.x = (parts[0]-item.width) * Math.random() + item.width/2;
+    else if(leftright == 2)
+      item.x = (app.screen.width-parts[1]-item.width) * Math.random() + parts[1] + item.width/2;
+    else
+      item.x = (app.screen.width-item.width) * Math.random() + item.width/2;
+  }
+  else
+    item.x = (app.screen.width-item.width) * Math.random() + item.width/2;
   item.y = -1 * item.height;
   let deg = 2*window.params.rotate*Math.random() - window.params.rotate;
   //item.updateTransform({rotation:deg*Math.PI/180});
   item.angle = deg;
   item.yMax = app.screen.height + window.params.delay + window.params.delayVary*Math.random();
-  let children = app.stage.children.slice();
+  let children = app.stage.getChildrenByLabel("falling").slice();
   children.sort((a,b)=>b.y-a.y);
   for(let otherItem of children)
   {
@@ -47,9 +75,10 @@ function startFalling()
 {
   try
   {
-    for(let item of app.stage.children)
+    app.stage.getChildByLabel("avoid").visible = false;
+    for(let item of app.stage.getChildrenByLabel("falling"))
     {
-        placeItem(item);
+      placeItem(item);
     }
     app.ticker.add(tick);
   }
@@ -70,7 +99,7 @@ function startFalling()
 
 function tick(ticker)
 {
-  for(let item of app.stage.children)
+  for(let item of app.stage.getChildrenByLabel("falling"))
   {
     item.y += ticker.deltaMS * window.params.speed / 1000;
     if(item.y > item.yMax)
@@ -89,20 +118,30 @@ async function createItems()
   app.ticker.remove(tick);
   app.renderer.background.color.setValue(window.params.background);
   app.stage.removeChildren();
+  
+  let box = new PIXI.Graphics();
+  box.label = "avoid";
+  box.rect(app.screen.width*(window.params.avoid-window.params.avoidWidth/2)/100, 0, app.screen.width*window.params.avoidWidth/100, app.screen.height);
+  box.stroke("white");
+  box.fill({
+    color: "black",
+    alpha: 0.5,
+  });
+  app.stage.addChild(box);
+  
   for(let name of window.params.names)
   {
     if(!name)
       continue;
     let item = new PIXI.Container();
+    item.label = "falling";
+    item.isFalling = true;
     
     // Create Sprite for this name.
     await PIXI.Assets.load(window.params.icon);
     let sprite = PIXI.Sprite.from(window.params.icon);
-    if(sprite.width > app.screen.width * window.params.width / 100)
-    {
-      let w = app.screen.width * window.params.width / 100;
-      sprite.scale.set(w / sprite.width);
-    }
+    if(sprite.width > window.params.width)
+      sprite.scale.set(window.params.width / sprite.width);
     item.addChild(sprite);
     
     // Create Text for this name.
@@ -110,9 +149,14 @@ async function createItems()
       text: name,
       style: {
         fontFamily: window.params.font,
+        stroke: window.params.shadowSize ? window.params.shadowColor : undefined,
         fill: window.params.color,
         fontSize: window.params.size,
         align: "center",
+        dropShadow: {
+          color: window.params.shadowColor,
+          blur: window.params.shadowSize,
+        },
       },
     });
     text.anchor.set(0.5);
@@ -127,13 +171,13 @@ async function createItems()
       text.scale.set(sprite.width / ogTextWidth);
     
     item.pivot.set(item.width/2, item.height/2);
-    item.angle = ((app.stage.children.length % 3) - 1) * window.params.rotate;
+    item.angle = ((app.stage.getChildrenByLabel("falling").length-1) % 3) * window.params.rotate;
     app.stage.addChild(item);
     
     let nextX = item.width/2;
     let thisLine = item.height/2;
     let nextLine = item.height/2;
-    for(let otherItem of app.stage.children)
+    for(let otherItem of app.stage.getChildrenByLabel("falling"))
     {
       if(item == otherItem)
         continue;
@@ -154,4 +198,22 @@ async function createItems()
   }
 }
 
-init().then(result => createItems()).then(result => location.pathname.includes("source.html") ? startFalling() : null);
+window.params = location.search.at(0)=="?" ? location.search.slice(1).split("&").reduce((result,param) => {
+  let p = param.split("=");
+  if(p[1])
+  {
+    let arr = p[1].split(",");
+    if(arr.length > 1)
+      result[p[0]] = arr.map(val => decodeURIComponent(val));
+    else
+      result[p[0]] = decodeURIComponent(p[1]);
+  }
+  else
+    result[p[0]] = true;
+  return result;
+}, {}) : {};
+window.params = setParams(window.params);
+
+const app = new PIXI.Application();
+
+const loaded = init().then(result => location.pathname.includes("source.html") ? createItems().then(result => startFalling()) : null);
