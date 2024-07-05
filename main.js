@@ -7,7 +7,7 @@ setParams();
 
 function setParams()
 {
-  window.params.icon = window.params.icon ?? "https://i.imgur.com/mgnZchn.png";
+  window.params.icon = decodeURIComponent(window.params.icon) ?? "https://i.imgur.com/mgnZchn.png";
   window.params.width = isNaN(window.params.width) ? 30 : parseFloat(window.params.width);
   window.params.rotate = isNaN(window.params.rotate) ? 30 : parseFloat(window.params.rotate);
   window.params.font = window.params.font ?? "Tahoma";
